@@ -1,6 +1,8 @@
 # Let's Play with Backstage
 
-<https://killercoda.com/playgrounds/scenario/ubuntu>
+With the procedure below, you can install your very own installation of Backstage on an Ubuntu Killercoda playground available at <https://killercoda.com/playgrounds/scenario/ubuntu>.
+
+## Prerequisities
 
 ```text
 sudo apt-get install -y python g++ build-essential
@@ -30,75 +32,34 @@ npm install --global yarn
 yarn --version
 ```
 
+## Backstage
+
 ```text
 npx @backstage/create-app@latest
 ```
-
-## NGINX
-
-```text
-apt-get update
-```
-
-```text
-apt-get install -y nginx
-```
-
-You can then the installation of NGINX with the _Traffic Port Accessor_ on port 80.
-
-```text
-vi backstage.conf
-```
-
-```nginx
-server {
-  listen 80;
-
-  location / {
-    proxy_pass http://localhost:3000/;
-  }
-}
-```
-
-```text
-rm /etc/nginx/sites-enabled/default
-```
-
-```text
-cp backstage.conf /etc/nginx/sites-available
-```
-
-```text
-ln -s /etc/nginx/sites-available/backstage.conf /etc/nginx/sites-enabled/backstage.conf
-```
-
-```text
-service nginx configtest
-```
-
-```text
-service nginx reload
-```
-
-```text
-service nginx status
-```
-
-## Backstage Configuration
 
 ```text
 cd backstage
 ```
 
-Use the _Traffic Port Accessor_ to get the URL accessing the port 7007, and use it to update the `baseUrl` of the `backend` within the `app-config.yaml`file.
+Use the _Traffic Port Accessor_ to get the URL accessing the ports 3000 and 7007, and use them to update the `baseUrl` of repsectively the `app` and the `backend` within the `app-config.yaml`file.
 
 ```text
 vi app-config.yaml
 ```
 
+***Warning.*** You need to update the `baseUrl` of the `app` to avoid the "Invalid Host header" error, **but** because of the Killercoda proxy, Backstage is not hit with the `https://` protocol, but with the `http://` protocol, so you MUST change the URL given by the _Traffic Port Accessor_, replacing `https://` by `http://` as illustrated below!
+
 ```yaml
+app:
+  baseUrl: http://d68f4aab-b3e7-4b97-a55e-e6b33267b180-10-244-3-249-3000.spch.r.killercoda.com
+  listen:
+    host: 0.0.0.0
+    port: 3000
 backend:
-  baseUrl: https://91715300-6655-48c4-90bd-e77d1fbb4c56-10-244-3-99-7007.spch.r.killercoda.com
+  baseUrl: https://d68f4aab-b3e7-4b97-a55e-e6b33267b180-10-244-3-249-7007.spch.r.killercoda.com
+  listen:
+    port: 7007
 ```
 
 ***Warning:*** the code above is just an example, you will have to use your own Killercoda URL, and **BE CAREFUL** not to put a training slash at the end of the URL!
@@ -107,7 +68,7 @@ backend:
 yarn dev
 ```
 
-Wait to see the line `[0] webpack compiled successfully` and use the _Traffic Port Accessor_ on port 80.
+Wait to see the line `[0] webpack compiled successfully` and use the _Traffic Port Accessor_ on port 3000.
 
 ## References
 
