@@ -9,7 +9,11 @@ sudo apt-get install -y python g++ build-essential
 ```
 
 ```text
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+```
+
+```text
+source ~/.bashrc
 ```
 
 ```text
